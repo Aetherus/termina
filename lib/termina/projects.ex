@@ -8,6 +8,26 @@ defmodule Termina.Projects do
 
   alias Termina.Projects.Project
 
+  def copy_project!(original_project_id, new_name) do
+    Repo.transaction(fn->
+      {:ok, new_project} = original_project_id
+                           |> get_project!()
+                           |> Map.from_struct()
+                           |> Map.put(:name, new_name)
+                           |> create_project()
+
+      Ecto.Adapters.SQL.query!(Repo, """
+        insert into terms (english, chinese, part_of_speech, description, project_id)
+        select english, chinese, part_of_speech, description, $1 as project_id 
+        from terms 
+        where project_id = $2
+        on conflict (english, part_of_speech, project_id) do nothing
+      """, [new_project.id, original_project_id])
+
+      new_project
+    end)
+  end
+
   @doc """
   Returns the list of projects.
 

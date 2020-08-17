@@ -23,6 +23,24 @@ defmodule TerminaWeb.ProjectChannel do
     create_resource(event, Projects, :create_project, payload, socket)
   end
 
+  # 复制项目
+  def handle_in(
+    "~project" = event,
+    %{
+      "original_id" => original_id,
+      "new_name" => new_name
+    },
+    socket
+  ) do
+    case Projects.copy_project!(original_id, new_name) do
+      {:ok, project} ->
+        broadcast(socket, "+project", project)
+        {:reply, {:ok, project}, socket}
+      {:error, _} ->
+        {:reply, :error, socket}
+    end
+  end
+
   # 创建词条
   def handle_in("+term" = event, payload, socket) do
     create_resource(event, Terms, :create_term, payload, socket)
