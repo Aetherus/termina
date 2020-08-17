@@ -3,6 +3,7 @@ defmodule TerminaWeb.UserSocket do
 
   ## Channels
   # channel "room:*", TerminaWeb.RoomChannel
+  channel "project:*", TerminaWeb.ProjectChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

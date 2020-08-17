@@ -17,8 +17,9 @@ defmodule Termina.Terms do
       [%Term{}, ...]
 
   """
-  def list_terms do
-    Repo.all(Term)
+  def list_terms(project_id, order_field \\ :english, order \\ :asc) do
+    from(t in Term, where: t.project_id == ^project_id, order_by: [{^order, ^order_field}])
+    |> Repo.all()
   end
 
   @doc """

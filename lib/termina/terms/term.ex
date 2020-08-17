@@ -2,6 +2,7 @@ defmodule Termina.Terms.Term do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
   schema "terms" do
     belongs_to :project, Termina.Projects.Project
 

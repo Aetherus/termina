@@ -30,9 +30,9 @@ defmodule Termina.TermsTest do
       term
     end
 
-    test "list_terms/0 returns all terms", context do
+    test "list_terms/1 returns all terms in a project", context do
       term = term_fixture(context)
-      assert Terms.list_terms() == [term]
+      assert Terms.list_terms(context.project.id) == [term]
     end
 
     test "get_term!/1 returns the term with given id", context do
