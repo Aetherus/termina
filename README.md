@@ -1,5 +1,51 @@
 # Termina
 
+## 实体定义
+
+### 项目
+
+```
+{
+  "id": ID,
+  "name": 项目名称（必须、唯一）,
+  "description": 项目描述（非必须）,
+  "inserted_at": 创建时间,
+  "updated_at": 修改时间
+}
+```
+
+### 词条
+
+```
+{
+  "id": ID,
+  "project_id": 关联项目ID（必须），
+  "english": 英文（必须、在项目内同一个词性唯一）,
+  "chinese": 中文（必须）,
+  "part_of_speech": 词性（必须，名词|动词|形容词|其他）,
+  "description": 解释（非必须）,
+  "inserted_at": 创建时间,
+  "updated_at": 修改时间
+}
+```
+
+## Phoenix WebSocket 接口：
+
+| 名称 | 上行/下行 | 事件 | Payload | 响应 | 成功后广播事件 |
+| 创建项目 | 上行 | +project | 项目实体（不含id和时间戳） | 项目实体/异常信息 | +project |
+| 创建项目 | 下行 | +project | - | 项目实体 | - |
+| 删除项目 | 上行 | -project | 项目实体 | 项目实体/异常信息 | -project |
+| 删除项目 | 下行 | -project | - | 项目实体 | - |
+| 修改项目 | 上行 | ^project | 项目实体 | 项目实体/异常信息 | ^project |
+| 修改项目 | 下行 | ^project | - | 项目实体 | - |
+| 复制项目 | 上行 | ~project | `{"original_id": 原始项目ID, "new_name": 新项目名称}` | 项目实体/异常信息 | +project |
+| 创建词条 | 上行 | +term    | 词条实体（不含id和时间戳） | 词条实体/异常信息 | +term |
+| 创建词条 | 下行 | +term | - | 词条实体 | - |
+| 删除词条 | 上行 | -term | 词条实体 | 词条实体/异常信息 | -term |
+| 删除词条 | 下行 | -term | - | 词条实体 | - |
+| 修改词条 | 上行 | ^term | 词条实体 | 词条实体/异常信息 | ^term |
+| 修改词条 | 下行 | ^term | - | 词条实体 | - |
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
