@@ -31,20 +31,22 @@
 
 ## Phoenix WebSocket 接口：
 
-| 名称 | 上行/下行 | 事件 | Payload | 响应 | 成功后广播事件 |
-| 创建项目 | 上行 | +project | 项目实体（不含id和时间戳） | 项目实体/异常信息 | +project |
-| 创建项目 | 下行 | +project | - | 项目实体 | - |
-| 删除项目 | 上行 | -project | 项目实体 | 项目实体/异常信息 | -project |
-| 删除项目 | 下行 | -project | - | 项目实体 | - |
-| 修改项目 | 上行 | ^project | 项目实体 | 项目实体/异常信息 | ^project |
-| 修改项目 | 下行 | ^project | - | 项目实体 | - |
-| 复制项目 | 上行 | ~project | `{"original_id": 原始项目ID, "new_name": 新项目名称}` | 项目实体/异常信息 | +project |
-| 创建词条 | 上行 | +term    | 词条实体（不含id和时间戳） | 词条实体/异常信息 | +term |
-| 创建词条 | 下行 | +term | - | 词条实体 | - |
-| 删除词条 | 上行 | -term | 词条实体 | 词条实体/异常信息 | -term |
-| 删除词条 | 下行 | -term | - | 词条实体 | - |
-| 修改词条 | 上行 | ^term | 词条实体 | 词条实体/异常信息 | ^term |
-| 修改词条 | 下行 | ^term | - | 词条实体 | - |
+| 名称 | 通道 | 连接/上行/下行 | 事件 | Payload | 响应 | 成功后广播事件 |
+| - | project:all | 连接 | - | - | 项目列表 | - |
+| - | project:<项目ID> | 连接 | - | - | 词条列表 | - |
+| 创建项目 | project:all | 上行 | +project | 项目实体（不含id和时间戳） | 项目实体/异常信息 | +project |
+| 创建项目 | project:all | 下行 | +project | - | 项目实体 | - |
+| 删除项目 | project:all | 上行 | -project | 项目实体 | 项目实体/异常信息 | -project |
+| 删除项目 | project:all | 下行 | -project | - | 项目实体 | - |
+| 修改项目 | project:all | 上行 | ^project | 项目实体 | 项目实体/异常信息 | ^project |
+| 修改项目 | project:all | 下行 | ^project | - | 项目实体 | - |
+| 复制项目 | project:all | 上行 | ~project | `{"original_id": 原始项目ID, "new_name": 新项目名称}` | 项目实体/异常信息 | +project |
+| 创建词条 | project:<项目ID> | 上行 | +term    | 词条实体（不含id和时间戳） | 词条实体/异常信息 | +term |
+| 创建词条 | project:<项目ID> | 下行 | +term | - | 词条实体 | - |
+| 删除词条 | project:<项目ID> | 上行 | -term | 词条实体 | 词条实体/异常信息 | -term |
+| 删除词条 | project:<项目ID> | 下行 | -term | - | 词条实体 | - |
+| 修改词条 | project:<项目ID> | 上行 | ^term | 词条实体 | 词条实体/异常信息 | ^term |
+| 修改词条 | project:<项目ID> | 下行 | ^term | - | 词条实体 | - |
 
 To start your Phoenix server:
 
