@@ -6,8 +6,8 @@ defmodule TerminaWeb.ProjectChannel do
   alias Termina.{Projects, Terms}
 
   @impl true
-  def join("project:lobby", _payload, socket) do
-    projects = Projects.list_projects()
+  def join("project:all", _payload, socket) do
+    projects = Projects.list_projects() |> IO.inspect(label: "Projects")
     {:ok, %{projects: projects}, socket}
   end
 
@@ -25,7 +25,7 @@ defmodule TerminaWeb.ProjectChannel do
 
   # 复制项目
   def handle_in(
-    "~project" = event,
+    "~project",
     %{
       "original_id" => original_id,
       "new_name" => new_name
@@ -48,22 +48,22 @@ defmodule TerminaWeb.ProjectChannel do
 
   # 更新项目
   def handle_in("^project" = event, payload, socket) do
-    update_resource(event, Projects, :get_project, :update_project, payload, socket)
+    update_resource(event, Projects, :get_project!, :update_project, payload, socket)
   end
 
   # 更新词条
   def handle_in("^term" = event, payload, socket) do
-    update_resource(event, Terms, :get_term, :update_term, payload, socket)
+    update_resource(event, Terms, :get_term!, :update_term, payload, socket)
   end
 
   # 删除项目
   def handle_in("-project" = event, payload, socket) do
-    delete_resource(event, Projects, :get_project, :delete_project, payload, socket)
+    delete_resource(event, Projects, :get_project!, :delete_project, payload, socket)
   end
 
   # 删除词条
   def handle_in("-term" = event, payload, socket) do
-    delete_resource(event, Terms, :get_term, :delete_term, payload, socket)
+    delete_resource(event, Terms, :get_term!, :delete_term, payload, socket)
   end
 
   defp create_resource(event, context, func, payload, socket) do
@@ -72,12 +72,13 @@ defmodule TerminaWeb.ProjectChannel do
         broadcast(socket, event, resource)
         {:reply, {:ok, resource}, socket}
       {:error, changeset} -> 
+        IO.inspect(changeset)
         {:reply, {:error,  translate_errors(changeset)}, socket}
     end
   end
 
   defp update_resource(event, context, get, update, payload, socket) do
-    resource = apply(context, get, payload["id"])
+    resource = apply(context, get, [payload["id"]])
     case apply(context, update, [resource, payload]) do
       {:ok, resource} ->
         broadcast(socket, event, resource)
@@ -88,8 +89,8 @@ defmodule TerminaWeb.ProjectChannel do
   end
 
   defp delete_resource(event, context, get, delete, payload, socket) do
-    resource = apply(context, get, payload["id"])
-    case apply(context, delete, [resource, payload]) do
+    resource = apply(context, get, [payload["id"]])
+    case apply(context, delete, [resource]) do
       {:ok, resource} ->
         broadcast(socket, event, resource)
         {:reply, :ok, socket}

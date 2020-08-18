@@ -2,7 +2,7 @@ defmodule TerminaWeb.ErrorHelpers do
   @doc """    
   Translates an error message using gettext.    
   """    
-  def translate_error({msg, opts}) do    
+  def translate_error({msg, opts}) do
     # When using gettext, we typically pass the strings we want    
     # to translate as a static argument:    
     #    
@@ -21,9 +21,9 @@ defmodule TerminaWeb.ErrorHelpers do
     # should be written to the errors.po file. The :count option is    
     # set by Ecto and indicates we should also apply plural rules.    
     if count = opts[:count] do    
-      Gettext.dngettext(FooWeb.Gettext, "errors", msg, msg, count, opts)    
+      Gettext.dngettext(TerminaWeb.Gettext, "errors", msg, msg, count, opts)    
     else    
-      Gettext.dgettext(FooWeb.Gettext, "errors", msg, opts)    
+      Gettext.dgettext(TerminaWeb.Gettext, "errors", msg, opts)    
     end    
   end
 end

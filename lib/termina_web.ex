@@ -22,6 +22,7 @@ defmodule TerminaWeb do
       use Phoenix.Controller, namespace: TerminaWeb
 
       import Plug.Conn
+      import TerminaWeb.Gettext
       alias TerminaWeb.Router.Helpers, as: Routes
     end
   end
@@ -53,6 +54,7 @@ defmodule TerminaWeb do
   def channel do
     quote do
       use Phoenix.Channel
+      import TerminaWeb.Gettext
     end
   end
 
@@ -62,6 +64,7 @@ defmodule TerminaWeb do
       import Phoenix.View
 
       import TerminaWeb.ErrorHelpers
+      import TerminaWeb.Gettext
       alias TerminaWeb.Router.Helpers, as: Routes
     end
   end

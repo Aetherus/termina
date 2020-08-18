@@ -2,7 +2,7 @@ defmodule Termina.Projects.Project do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, except: [:__struct__, :__meta__]}
+  @derive {Jason.Encoder, only: [:id, :name, :description, :inserted_at, :updated_at]}
   schema "projects" do
     field :name, :string
     field :description, :string
