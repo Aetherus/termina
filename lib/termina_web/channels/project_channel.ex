@@ -7,7 +7,7 @@ defmodule TerminaWeb.ProjectChannel do
 
   @impl true
   def join("project:all", _payload, socket) do
-    projects = Projects.list_projects() |> IO.inspect(label: "Projects")
+    projects = Projects.list_projects()
     {:ok, %{projects: projects}, socket}
   end
 
@@ -72,7 +72,6 @@ defmodule TerminaWeb.ProjectChannel do
         broadcast(socket, event, resource)
         {:reply, {:ok, resource}, socket}
       {:error, changeset} -> 
-        IO.inspect(changeset)
         {:reply, {:error,  translate_errors(changeset)}, socket}
     end
   end

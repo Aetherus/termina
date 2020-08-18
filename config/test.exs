@@ -20,3 +20,12 @@ config :termina, TerminaWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :libcluster, topologies: [
+  local: [
+    strategy: Cluster.Strategy.Epmd,
+    config: [
+      hosts: []
+    ]
+  ]
+]
