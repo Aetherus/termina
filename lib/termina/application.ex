@@ -6,7 +6,10 @@ defmodule Termina.Application do
   use Application
 
   def start(_type, _args) do
+    topologies = Application.fetch_env!(:libcluster, :topologies)
+
     children = [
+      {Cluster.Supervisor, [topologies, [name: Termina.ClusterSupervisor]]},
       # Start the Ecto repository
       Termina.Repo,
       # Start the Telemetry supervisor

@@ -29,7 +29,7 @@ COPY priv priv
 # compile and build release
 COPY lib lib
 # uncomment COPY if rel/ exists
-# COPY rel rel
+COPY rel rel
 RUN mix do compile, release
 
 # prepare release image

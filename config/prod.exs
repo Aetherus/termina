@@ -3,7 +3,11 @@ use Mix.Config
 config :termina, TerminaWeb.Endpoint,
   server: true,
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  http: [
+    port: String.to_integer(System.get_env("PORT") || "4000"),
+    transport_options: [socket_opts: [:inet6]]
+  ]
 
 config :logger, level: :info
 

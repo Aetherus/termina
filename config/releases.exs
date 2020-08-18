@@ -1,9 +1,10 @@
 import Config
 
 config :termina, TerminaWeb.Endpoint,
+  check_origin: false,
   url: [
     host: System.fetch_env!("TERMINA_HOST"), 
-    port: System.get_env("TERMINA_PORT", "4000") |> String.to_integer()
+    port: System.get_env("TERMINA_PORT", "4000") |> String.to_integer(),
   ]
 
 config :termina, Termina.Repo,
