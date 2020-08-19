@@ -7,6 +7,7 @@ defmodule Termina.Projects do
   alias Termina.Repo
 
   alias Termina.Projects.Project
+  alias Termina.Terms
 
   def copy_project!(original_project_id, new_name) do
     Repo.transaction(fn->
@@ -16,13 +17,7 @@ defmodule Termina.Projects do
                            |> Map.put(:name, new_name)
                            |> create_project()
 
-      Ecto.Adapters.SQL.query!(Repo, """
-        insert into terms (english, chinese, part_of_speech, description, project_id, inserted_at, updated_at)
-        select english, chinese, part_of_speech, description, $1 as project_id, now() as inserted_at, now() as updated_at
-        from terms 
-        where project_id = $2
-        on conflict (english, part_of_speech, project_id) do nothing
-      """, [new_project.id, original_project_id])
+      Terms.import_terms(original_project_id, new_project.id, :keep)
 
       new_project
     end)

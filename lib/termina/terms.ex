@@ -8,6 +8,47 @@ defmodule Termina.Terms do
 
   alias Termina.Terms.Term
 
+  @spec import_terms(integer | String.t, integer | String.t, :keep | :overwrite) :: any
+  def import_terms(from_project_id, to_project_id, on_conflict \\ "keep") do
+    sql = sql_for_import(on_conflict)
+    Ecto.Adapters.SQL.query!(Repo, sql, [to_project_id, from_project_id])
+  end
+
+  defp sql_for_import(:keep) do
+    """
+    insert into terms (english, chinese, part_of_speech, description, project_id, inserted_at, updated_at)
+    select english,
+           chinese,
+           part_of_speech,
+           description, 
+           $1 as project_id, 
+           now() as inserted_at,
+           now() as updated_at
+    from terms
+    where project_id = $2
+    on conflict (english, part_of_speech, project_id) do nothing
+    """
+  end
+
+  defp sql_for_import(:overwrite) do
+    """
+    insert into terms (english, chinese, part_of_speech, description, project_id, inserted_at, updated_at)
+    select english, 
+           chinese, 
+           part_of_speech, 
+           description, 
+           $1 as project_id, 
+           now() as inserted_at, 
+           now() as updated_at
+    from terms
+    where project_id = $2
+    on conflict (english, part_of_speech, project_id) do update
+    set chinese = excluded.chinese, 
+        description = excluded.description,
+        updated_at = now()
+    """
+  end
+
   @doc """
   Returns the list of terms.
 

@@ -41,6 +41,21 @@ defmodule TerminaWeb.ProjectChannel do
     end
   end
 
+  # 导入词条
+  def handle_in(
+    "<terms" = event,
+    %{
+      "from" => from_id, 
+      "to" => to_id,
+      "on_conflict" => on_conflict
+    },
+    socket
+  ) when on_conflict in ~w[keep overwrite] do
+    Terms.import_terms(from_id, to_id, String.to_existing_atom(on_conflict))
+    TerminaWeb.Endpoint.broadcast("project:#{to_id}", event, %{terms: Terms.list_terms(to_id)})
+    {:reply, :ok, socket}
+  end
+
   # 创建词条
   def handle_in("+term" = event, payload, socket) do
     create_resource(event, Terms, :create_term, payload, socket)
